@@ -26,57 +26,28 @@ public class BookService {
     //    private final DozerBeanMapper dozerBeanMapper;
     DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
-    public List<BookDto> findAllBook() {
-        List<Book> bookDtoList = bookRepository.findAll();
-        return bookDtoList.stream().map(book ->
-                dozerBeanMapper.map(book, BookDto.class)).collect(Collectors.toList());
-    }
-
     public BookDto createBook(BookDto bookDto) {
 
         Book book = bookRepository.save(dozerBeanMapper.map(bookDto, Book.class));
         return dozerBeanMapper.map(book, BookDto.class);
     }
 
-    public BookDto findOneBook(Long id) throws Exception {
-        Book book = bookRepository.findById(id).orElseThrow(Exception::new);
-        return dozerBeanMapper.map(book, BookDto.class);
-
-//        boolean existBook = bookRepository.existsById(id);
-//
-//        if(!existBook){
-//            throw new BookNotFoundException(id);
-//        }
-//        Book book = bookRepository.findById(id);
-//        return dozerBeanMapper.map(book, BookDto.class);
-
-//            Optional<Book> book = null;
-//        if (!bookRepository.existsById(id)) {
-//            throw new BookNotFoundException(id);
-//        } else {
-//            book = bookRepository.findById(id);
-//            BookDto bookDozer = dozerBeanMapper.map(book, BookDto.class);
-//
-//            System.out.println(bookDozer);
-//            return dozerBeanMapper.map(book, BookDto.class);
-
-//        return bookRepository.findById(id)
-//                .map(x -> {
-//                    Book book = bookRepository.findById(id);
-//                    BookDto bookDto = dozerBeanMapper.map(book, BookDto.class);
-//                    return bookDto;
-//
-////                    if (!isBlank(author)) {
-////                        x.setAuthor(author);
-////                        return bookRepository.save(x);
-////                    } else {
-////                        throw new BookUnSupportedFieldPatchException(update.keySet());
-////                    }
-//                }).orElseThrow(() -> new BookNotFoundException(id));
+    public List<BookDto> findAllBook() {
+        List<Book> bookList = bookRepository.findAll();
+        return bookList.stream().map(book ->
+                dozerBeanMapper.map(book, BookDto.class)).collect(Collectors.toList());
     }
 
-    public Book updateBook(Book book, Long id) {
-        return bookRepository.findById(id).map(x -> {
+    public BookDto findOneBook(Long id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        return dozerBeanMapper.map(book, BookDto.class);
+
+
+    }
+
+    public BookDto updateBook(BookDto bookDto, Long id) {
+        Book book = dozerBeanMapper.map(bookDto, Book.class);
+        Book updateBook = bookRepository.findById(id).map(x -> {
             x.setName(book.getName());
             x.setAuthor(book.getAuthor());
             x.setPrice(book.getPrice());
@@ -85,10 +56,13 @@ public class BookService {
             book.setId(id);
             return bookRepository.save(book);
         });
+
+        return dozerBeanMapper.map(updateBook, BookDto.class);
     }
 
-    public Book patchAuthor(Map<String, String> update, Long id) {
-        return bookRepository.findById(id)
+    public BookDto patchAuthor(Map<String, String> update, Long id) {
+
+        Book book = bookRepository.findById(id)
                 .map(x -> {
                     String author = update.get("author");
                     if (!isBlank(author)) {
@@ -98,9 +72,14 @@ public class BookService {
                         throw new BookUnSupportedFieldPatchException(update.keySet());
                     }
                 }).orElseThrow(() -> new BookNotFoundException(id));
+
+        return dozerBeanMapper.map(book, BookDto.class);
     }
 
     public void deleteBook(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new BookNotFoundException(id);
+        }
         bookRepository.deleteById(id);
     }
 
