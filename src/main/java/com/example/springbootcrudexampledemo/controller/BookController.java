@@ -54,8 +54,8 @@ public class BookController {
     public ResponseEntity<BookResponse> updateBook(@RequestBody BookCreateRequest bookCreateRequest, @PathVariable Long id) {
 
         BookDto bookDto = dozerBeanMapper.map(bookCreateRequest, BookDto.class);
-        bookService.updateBook(bookDto, id);
-        return ResponseEntity.ok(dozerBeanMapper.map(bookDto, BookResponse.class));
+        BookDto bookUpdatedDto = bookService.updateBook(bookDto, id);
+        return ResponseEntity.ok(dozerBeanMapper.map(bookUpdatedDto, BookResponse.class));
 
     }
 

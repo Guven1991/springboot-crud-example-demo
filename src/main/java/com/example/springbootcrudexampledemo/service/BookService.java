@@ -7,16 +7,13 @@ import com.example.springbootcrudexampledemo.error.BookUnSupportedFieldPatchExce
 import com.example.springbootcrudexampledemo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.dozer.DozerBeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.apache.logging.log4j.util.Strings.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +38,6 @@ public class BookService {
     public BookDto findOneBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
         return dozerBeanMapper.map(book, BookDto.class);
-
 
     }
 
