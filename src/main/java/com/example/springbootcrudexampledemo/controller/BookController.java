@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/books")
@@ -19,14 +20,17 @@ public class BookController {
     private final BookService bookService;
 
     public BookController(BookService bookService) {
+
         this.bookService = bookService;
     }
 
     @GetMapping
-    public List<BookDto> findAll() {
-        return bookService.findAllBook();
+    public ResponseEntity<List<BookResponse>> findAll() {
+        List<BookDto> bookDtoList = bookService.findAllBook();
+        List<BookResponse> bookResponseList =  bookDtoList.stream().map(bookDto ->
+                dozerBeanMapper.map(bookDto,BookResponse.class)).collect(Collectors.toList());
+        return ResponseEntity.ok(bookResponseList);
     }
-
 
     @PostMapping
     public ResponseEntity<BookResponse> createBook(@RequestBody BookCreateRequest bookCreateRequest) {
