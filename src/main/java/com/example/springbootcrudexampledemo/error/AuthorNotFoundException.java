@@ -4,6 +4,6 @@ public class AuthorNotFoundException extends RuntimeException{
 
     public AuthorNotFoundException(Long id){
 
-        super("Author id not found : " + id);
+        super("Author not found : " + id);
     }
 }

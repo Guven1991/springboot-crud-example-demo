@@ -3,8 +3,6 @@ package com.example.springbootcrudexampledemo.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 public class BookResponse {
@@ -13,7 +11,7 @@ public class BookResponse {
 
     private String name;
 
-    private String author;
+    private AuthorResponse author;
 
-    private BigDecimal price;
+    private Double price;
 }

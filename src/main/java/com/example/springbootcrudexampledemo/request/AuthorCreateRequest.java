@@ -7,6 +7,8 @@ import lombok.Data;
 @Builder
 public class AuthorCreateRequest {
 
+    private Long id;
+
     private String name;
 
     private String lastname;

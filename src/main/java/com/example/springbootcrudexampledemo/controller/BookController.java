@@ -60,8 +60,8 @@ public class BookController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BookResponse> patchAuthor(@RequestBody Map<String, String> update, @PathVariable Long id) {
-        BookDto bookDto = bookService.patchAuthor(update, id);
+    public ResponseEntity<BookResponse> patchPrice(@RequestBody Map<Double, Double> update, @PathVariable Long id) {
+        BookDto bookDto = bookService.patchPrice(update, id);
         return ResponseEntity.ok(dozerBeanMapper.map(bookDto, BookResponse.class));
     }
 

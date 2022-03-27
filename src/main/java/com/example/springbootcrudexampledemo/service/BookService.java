@@ -1,7 +1,9 @@
 package com.example.springbootcrudexampledemo.service;
 
+import com.example.springbootcrudexampledemo.dto.AuthorDto;
 import com.example.springbootcrudexampledemo.dto.BookDto;
 import com.example.springbootcrudexampledemo.entity.Book;
+import com.example.springbootcrudexampledemo.error.AuthorNotFoundException;
 import com.example.springbootcrudexampledemo.error.BookNotFoundException;
 import com.example.springbootcrudexampledemo.error.BookUnSupportedFieldPatchException;
 import com.example.springbootcrudexampledemo.repository.BookRepository;
@@ -13,19 +15,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 @Service
 @RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorService authorService;
     //    private final DozerBeanMapper dozerBeanMapper;
     DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
     public BookDto createBook(BookDto bookDto) {
 
+        if(bookDto.getAuthor() == null){
+            throw  new AuthorNotFoundException(bookDto.getId());
+        }
+
+        AuthorDto authorDto = authorService.createAuthor(bookDto.getAuthor());
+        bookDto.setAuthor(authorDto);
+
         Book book = bookRepository.save(dozerBeanMapper.map(bookDto, Book.class));
+
+
         return dozerBeanMapper.map(book, BookDto.class);
     }
 
@@ -56,13 +66,13 @@ public class BookService {
         return dozerBeanMapper.map(updateBook, BookDto.class);
     }
 
-    public BookDto patchAuthor(Map<String, String> update, Long id) {
+    public BookDto patchPrice(Map<Double, Double> update, Long id) {
 
         Book book = bookRepository.findById(id)
                 .map(x -> {
-                    String author = update.get("author");
-                    if (!isBlank(author)) {
-                        x.setAuthor(author);
+                    Double price =update.get(50.04);
+                    if (!(price == null)) {
+                        x.setPrice(price);
                         return bookRepository.save(x);
                     } else {
                         throw new BookUnSupportedFieldPatchException(update.keySet());

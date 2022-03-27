@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class AuthorUpdateRequest {
 
+
     private String name;
 
     private String lastname;
