@@ -19,9 +19,9 @@ public class Book {
 
     private String name;
 
-//    @ManyToOne
-//    private Author author;
-    private String author;
+    @ManyToOne
+    private Author author;
+//    private String author;
 
     private BigDecimal price;
 
