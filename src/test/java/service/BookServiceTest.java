@@ -69,14 +69,14 @@ public class BookServiceTest {
                 .build();
     }
 
-    @Test
-    public void  createBook(){
-
-        Mockito.when(bookRepository.save(any())).thenReturn(book);
-        BookDto bookDtoReturned = bookService.createBook(bookDto);
-        assertEquals(Optional.of(1L),Optional.ofNullable(bookDtoReturned.getId()));
-        assertEquals("ali ata bak",bookDtoReturned.getName());
-    }
+//    @Test
+//    public void  createBook(){
+//
+//        Mockito.when(bookRepository.save(any())).thenReturn(book);
+//        BookDto bookDtoReturned = bookService.createBook(bookDto);
+//        assertEquals(Optional.of(1L),Optional.ofNullable(bookDtoReturned.getId()));
+//        assertEquals("ali ata bak",bookDtoReturned.getName());
+//    }
 
     @Test
     public void  findAllBook(){

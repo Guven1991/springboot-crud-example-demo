@@ -6,3 +6,4 @@
 ###Lombok
 ###Maven 4
 ###Java 11
+###Junit

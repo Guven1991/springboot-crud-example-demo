@@ -5,15 +5,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AuthorResponse {
+public class BookAuthorResponse {
 
     private Long id;
 
     private String name;
+//
+//    private AuthorResponse author;
 
-    private String lastname;
-
-//    private List<BookResponse> bookList;
-
-
+    private Double price;
 }

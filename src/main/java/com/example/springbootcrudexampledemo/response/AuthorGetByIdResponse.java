@@ -3,9 +3,11 @@ package com.example.springbootcrudexampledemo.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
-public class AuthorResponse {
+public class AuthorGetByIdResponse {
 
     private Long id;
 
@@ -13,7 +15,7 @@ public class AuthorResponse {
 
     private String lastname;
 
-//    private List<BookResponse> bookList;
+    private List<BookAuthorResponse> bookList;
 
 
 }

@@ -1,14 +1,13 @@
 package com.example.springbootcrudexampledemo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +21,7 @@ public class Book {
     @Column(name = "name")
     private String name;
 
+    @JsonBackReference
     @ManyToOne
     private Author author;
 

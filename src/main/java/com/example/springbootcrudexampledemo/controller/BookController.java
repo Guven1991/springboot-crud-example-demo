@@ -5,6 +5,7 @@ import com.example.springbootcrudexampledemo.request.BookCreateRequest;
 import com.example.springbootcrudexampledemo.response.BookResponse;
 import com.example.springbootcrudexampledemo.service.BookService;
 import org.dozer.DozerBeanMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,9 @@ import java.util.stream.Collectors;
 public class BookController {
 
     DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
-    private final BookService bookService;
+
+    @Autowired
+    private  BookService bookService;
 
     public BookController(BookService bookService) {
 

@@ -2,8 +2,10 @@ package com.example.springbootcrudexampledemo.controller;
 
 import com.example.springbootcrudexampledemo.dto.AuthorDto;
 import com.example.springbootcrudexampledemo.request.AuthorCreateRequest;
+import com.example.springbootcrudexampledemo.response.AuthorGetByIdResponse;
 import com.example.springbootcrudexampledemo.response.AuthorResponse;
 import com.example.springbootcrudexampledemo.service.AuthorService;
+import lombok.RequiredArgsConstructor;
 import org.dozer.DozerBeanMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +15,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/author")
+@RequiredArgsConstructor
 public class AuthorController {
 
     DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
     private final AuthorService authorService;
-
-    public AuthorController(AuthorService authorService) {
-
-        this.authorService = authorService;
-    }
 
     @GetMapping
     public ResponseEntity<List<AuthorResponse>> findAll() {
@@ -33,18 +31,18 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AuthorResponse> findOneBook(@PathVariable Long id) {
+    public ResponseEntity<AuthorGetByIdResponse> getAuthorById(@PathVariable Long id) {
         AuthorDto authorDto = null;
         try {
-            authorDto = authorService.findOneAuthor(id);
+            authorDto = authorService.getAuthorById(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(dozerBeanMapper.map(authorDto, AuthorResponse.class));
+        return ResponseEntity.ok(dozerBeanMapper.map(authorDto, AuthorGetByIdResponse.class));
     }
 
     @PostMapping
-    public ResponseEntity<AuthorResponse> createBook(@RequestBody AuthorCreateRequest authorCreateRequest) {
+    public ResponseEntity<AuthorResponse> createAuthor(@RequestBody AuthorCreateRequest authorCreateRequest) {
 
         AuthorDto authorDto = authorService.createAuthor(dozerBeanMapper.map(authorCreateRequest, AuthorDto.class));
         return ResponseEntity.ok(dozerBeanMapper.map(authorDto, AuthorResponse.class));

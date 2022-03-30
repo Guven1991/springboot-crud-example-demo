@@ -9,6 +9,7 @@ import com.example.springbootcrudexampledemo.error.BookUnSupportedFieldPatchExce
 import com.example.springbootcrudexampledemo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.dozer.DozerBeanMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,9 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final AuthorService authorService;
+
+    @Autowired
+    private AuthorService authorService;
     //    private final DozerBeanMapper dozerBeanMapper;
     DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
@@ -89,5 +92,11 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
+    public List<BookDto> getAllBooksByAuthorId(Long id) {
+        List<Book> bookList = bookRepository.getBooksByAuthor_Id(id);
 
+        return bookList.stream().map(book ->
+                dozerBeanMapper.map(book, BookDto.class)).collect(Collectors.toList());
+
+    }
 }

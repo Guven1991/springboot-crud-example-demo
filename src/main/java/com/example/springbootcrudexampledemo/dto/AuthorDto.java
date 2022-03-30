@@ -19,5 +19,5 @@ public class AuthorDto {
 
     private String lastname;
 
-    private List<BookDto> books;
+    private List<BookDto> bookList;
 }
