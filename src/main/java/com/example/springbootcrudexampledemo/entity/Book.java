@@ -1,6 +1,5 @@
 package com.example.springbootcrudexampledemo.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +20,7 @@ public class Book {
     @Column(name = "name")
     private String name;
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     private Author author;
 

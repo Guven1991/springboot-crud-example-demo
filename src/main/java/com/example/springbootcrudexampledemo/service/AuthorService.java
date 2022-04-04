@@ -5,26 +5,27 @@ import com.example.springbootcrudexampledemo.dto.BookDto;
 import com.example.springbootcrudexampledemo.entity.Author;
 import com.example.springbootcrudexampledemo.error.AuthorNotFoundException;
 import com.example.springbootcrudexampledemo.repository.AuthorRepository;
-import lombok.RequiredArgsConstructor;
 import org.dozer.DozerBeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AuthorService {
+
+    private final AuthorRepository authorRepository;
+    private final BookService bookService;
+
+    public AuthorService(AuthorRepository authorRepository, @Lazy BookService bookService) {
+        this.authorRepository = authorRepository;
+        this.bookService = bookService;
+    }
 
     DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
-    private final AuthorRepository authorRepository;
-
-    @Autowired
-    private BookService bookService;
-
-    public List<AuthorDto> findAll() {
+    public List<AuthorDto> getAllAuthors() {
         List<Author> authorList = authorRepository.findAll();
         return authorList.stream().map(author ->
                 dozerBeanMapper.map(author, AuthorDto.class)).collect(Collectors.toList());

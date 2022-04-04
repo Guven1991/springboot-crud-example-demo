@@ -7,9 +7,8 @@ import com.example.springbootcrudexampledemo.error.AuthorNotFoundException;
 import com.example.springbootcrudexampledemo.error.BookNotFoundException;
 import com.example.springbootcrudexampledemo.error.BookUnSupportedFieldPatchException;
 import com.example.springbootcrudexampledemo.repository.BookRepository;
-import lombok.RequiredArgsConstructor;
 import org.dozer.DozerBeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,27 +16,28 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorService authorService;
 
-    @Autowired
-    private AuthorService authorService;
-    //    private final DozerBeanMapper dozerBeanMapper;
+    public BookService(BookRepository bookRepository,@Lazy AuthorService authorService) {
+        this.bookRepository = bookRepository;
+        this.authorService = authorService;
+    }
+
     DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
     public BookDto createBook(BookDto bookDto) {
 
-        if(bookDto.getAuthor() == null){
-            throw  new AuthorNotFoundException(bookDto.getId());
+        if (bookDto.getAuthor() == null) {
+            throw new AuthorNotFoundException(bookDto.getId());
         }
 
         AuthorDto authorDto = authorService.createAuthor(bookDto.getAuthor());
         bookDto.setAuthor(authorDto);
 
         Book book = bookRepository.save(dozerBeanMapper.map(bookDto, Book.class));
-
 
         return dozerBeanMapper.map(book, BookDto.class);
     }
@@ -73,7 +73,7 @@ public class BookService {
 
         Book book = bookRepository.findById(id)
                 .map(x -> {
-                    Double price =update.get(50.04);
+                    Double price = update.get(50.04);
                     if (!(price == null)) {
                         x.setPrice(price);
                         return bookRepository.save(x);

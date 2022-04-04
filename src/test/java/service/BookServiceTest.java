@@ -5,6 +5,7 @@ import com.example.springbootcrudexampledemo.dto.BookDto;
 import com.example.springbootcrudexampledemo.entity.Author;
 import com.example.springbootcrudexampledemo.entity.Book;
 import com.example.springbootcrudexampledemo.repository.BookRepository;
+import com.example.springbootcrudexampledemo.service.AuthorService;
 import com.example.springbootcrudexampledemo.service.BookService;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,9 @@ public class BookServiceTest {
     @Mock
     private BookRepository bookRepository;
 
+    @Mock
+    private AuthorService authorService;
+
     @InjectMocks
     @Spy
     private BookService bookService;
@@ -40,7 +44,7 @@ public class BookServiceTest {
     private AuthorDto authorDto;
 
     @Before
-    public void init(){
+    public void init() {
 
         author = Author.builder()
                 .id(1L)
@@ -61,7 +65,7 @@ public class BookServiceTest {
                 .price(50.05)
                 .build();
 
-        bookDto =BookDto.builder()
+        bookDto = BookDto.builder()
                 .id(book.getId())
                 .name(book.getName())
                 .author(authorDto)
@@ -69,29 +73,32 @@ public class BookServiceTest {
                 .build();
     }
 
-//    @Test
-//    public void  createBook(){
-//
-//        Mockito.when(bookRepository.save(any())).thenReturn(book);
-//        BookDto bookDtoReturned = bookService.createBook(bookDto);
-//        assertEquals(Optional.of(1L),Optional.ofNullable(bookDtoReturned.getId()));
-//        assertEquals("ali ata bak",bookDtoReturned.getName());
-//    }
+    @Test
+    public void createBook() {
+
+        when(bookRepository.save(any())).thenReturn(book);
+        when(authorService.createAuthor(any())).thenReturn(authorDto);
+
+        BookDto bookDtoReturned = bookService.createBook(bookDto);
+
+        assertEquals(Optional.of(1L), Optional.ofNullable(bookDtoReturned.getId()));
+        assertEquals("ali ata bak", bookDtoReturned.getName());
+    }
 
     @Test
-    public void  findAllBook(){
+    public void findAllBook() {
         List<Book> bookList = new ArrayList<>();
         bookList.add(book);
         Mockito.when(bookRepository.findAll()).thenReturn(bookList);
         List<BookDto> bookDtoList = bookService.findAllBook();
 
-        assertEquals(1,bookDtoList.size());
+        assertEquals(1, bookDtoList.size());
         assertEquals("guven", bookDtoList.get(0).getAuthor().getName());
 
-       }
+    }
 
     @Test
-    public void findOneBook(){
+    public void findOneBook() {
         Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.ofNullable(book));
         BookDto bookDtoReturned = bookService.findOneBook(1L);
         assertEquals("guven", bookDtoReturned.getAuthor().getName());
@@ -99,18 +106,18 @@ public class BookServiceTest {
     }
 
     @Test
-    public void updateBook(){
+    public void updateBook() {
         book.setPrice(50.05);
         bookDto.setPrice(50.05);
 
         when(bookRepository.save(any())).thenReturn(book);
-        BookDto bookDtoReturned = bookService.updateBook(bookDto,1L);
-        assertEquals(Optional.of(50.05),Optional.ofNullable(bookDtoReturned.getPrice()));
+        BookDto bookDtoReturned = bookService.updateBook(bookDto, 1L);
+        assertEquals(Optional.of(50.05), Optional.ofNullable(bookDtoReturned.getPrice()));
 
     }
 
     @Test
-    public void patchPrice(){
+    public void patchPrice() {
         book.setPrice(50.05);
         bookDto.setPrice(50.05);
 
@@ -120,20 +127,27 @@ public class BookServiceTest {
         when(bookRepository.findById(any())).thenReturn(Optional.ofNullable(book));
         when(bookRepository.save(any())).thenReturn(book);
 
-        BookDto bookDtoReturned = bookService.patchPrice(update,1L);
-        assertEquals(Optional.of(50.05),Optional.ofNullable(bookDtoReturned.getPrice()));
+        BookDto bookDtoReturned = bookService.patchPrice(update, 1L);
+        assertEquals(Optional.of(50.05), Optional.ofNullable(bookDtoReturned.getPrice()));
 
     }
 
     @Test
-    public void deleteBook(){
+    public void deleteBook() {
         when(bookRepository.existsById(any())).thenReturn(true);
         bookService.deleteBook(1L);
         verify(bookRepository).deleteById(1L);
     }
 
-
-
+    @Test
+    public void getAllBooksByAuthorId() {
+        List<Book> bookList = new ArrayList<>();
+        bookList.add(book);
+        when(bookRepository.getBooksByAuthor_Id(any())).thenReturn(bookList);
+        List<BookDto> bookDtoList = bookService.getAllBooksByAuthorId(1L);
+        assertEquals(1, bookDtoList.size());
+        assertEquals("guven", bookDtoList.get(0).getAuthor().getName());
+    }
 
 
 }

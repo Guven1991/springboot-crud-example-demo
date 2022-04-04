@@ -24,7 +24,7 @@ public class AuthorController {
 
     @GetMapping
     public ResponseEntity<List<AuthorResponse>> findAll() {
-        List<AuthorDto> authorDtoList = authorService.findAll();
+        List<AuthorDto> authorDtoList = authorService.getAllAuthors();
         List<AuthorResponse> authorResponseList =  authorDtoList.stream().map(authorDto ->
                 dozerBeanMapper.map(authorDto,AuthorResponse.class)).collect(Collectors.toList());
         return ResponseEntity.ok(authorResponseList);

@@ -11,7 +11,7 @@ public class BookAuthorResponse {
 
     private String name;
 //
-//    private AuthorResponse author;
+//  private AuthorResponse author;
 
     private Double price;
 }
